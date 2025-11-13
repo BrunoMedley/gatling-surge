@@ -1,3 +1,7 @@
+# gatling-surge
+
+Gatling base setup performance project
+
 # Performance Testing with Gatling (Java)
 
 Welcome to the performance engineering workspace. This project uses [Gatling](https://gatling.io/) with the Java DSL to define and execute repeatable load, stress, and soak scenarios.
@@ -37,4 +41,3 @@ target/gatling/             # Generated reports (ignored in VCS)
 - Capture SLA targets in `docs/results-guide.md` to track regression thresholds.
 
 Happy profiling!
-
