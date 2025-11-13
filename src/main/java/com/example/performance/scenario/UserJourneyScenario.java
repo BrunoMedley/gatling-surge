@@ -3,12 +3,10 @@ package com.example.performance.scenario;
 import io.gatling.javaapi.core.ChainBuilder;
 import io.gatling.javaapi.core.FeederBuilder;
 
-import static io.gatling.javaapi.core.CoreDsl.exec;
 import static io.gatling.javaapi.core.CoreDsl.feed;
-import static io.gatling.javaapi.core.CoreDsl.pause;
-import static io.gatling.javaapi.http.HttpDsl.ElFileBody;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
+import static io.gatling.javaapi.core.CoreDsl.ElFileBody;
 
 /**
  * Defines the user journey scenario - the sequence of HTTP requests
@@ -26,7 +24,7 @@ public final class UserJourneyScenario {
      * @param feeder The data feeder providing test data (e.g., user IDs, emails)
      * @return A ChainBuilder representing the complete user journey
      */
-    public static ChainBuilder defaultJourney(FeederBuilder<Object> feeder) {
+    public static ChainBuilder defaultJourney(FeederBuilder<String> feeder) {
         return feed(feeder)  // Load test data from feeder into session
             // Step 1: Health check endpoint
             .exec(http("Health Check")

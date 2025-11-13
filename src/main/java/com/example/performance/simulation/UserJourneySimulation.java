@@ -8,7 +8,6 @@ import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
 
 import static io.gatling.javaapi.core.CoreDsl.csv;
-import static io.gatling.javaapi.core.CoreDsl.injectOpen;
 import static io.gatling.javaapi.core.CoreDsl.rampUsersPerSec;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
 
@@ -23,7 +22,7 @@ public class UserJourneySimulation extends Simulation {
     private final SimulationConfig config = new SimulationConfig();
     
     // CSV feeder that cycles through user data (circular = loops back to start when exhausted)
-    private final FeederBuilder<Object> userFeeder = csv("data/users.csv").circular();
+    private final FeederBuilder<String> userFeeder = csv("data/users.csv").circular();
 
     {
         // Build the scenario with the user journey steps
@@ -36,7 +35,7 @@ public class UserJourneySimulation extends Simulation {
         // - Over the configured ramp duration
         setUp(
             scn.injectOpen(
-                rampUsersPerSec(1).to(config.getUsersPerSecond()).during(config.getRampDuration())
+                rampUsersPerSec(1.0).to(config.getUsersPerSecond()).during(config.getRampDuration())
             )
         ).protocols(HttpProtocolFactory.defaultHttpProtocol(config));
     }

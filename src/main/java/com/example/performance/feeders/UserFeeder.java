@@ -5,8 +5,10 @@ import io.gatling.javaapi.core.Session;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-import static io.gatling.javaapi.core.CoreDsl.IteratorFeederBuilder;
+import static io.gatling.javaapi.core.CoreDsl.*;
 
 /**
  * Utility class for creating data feeders that provide test data to scenarios.
@@ -20,21 +22,23 @@ public final class UserFeeder {
 
     /**
      * Creates a feeder that generates random user data on-the-fly.
-     * Useful when you need unique data for each virtual user without a CSV file.
-     * 
-     * @return A FeederBuilder that generates random userId and email for each iteration
+     * Each virtual user gets a unique userId and email.
+     *
+     * @return A FeederBuilder that generates random userId and email
      */
     public static FeederBuilder<Object> randomUsers() {
-        return IteratorFeederBuilder(() -> Map.of(
-            "userId", UUID.randomUUID().toString(),  // Random UUID as user ID
-            "email", "user+" + UUID.randomUUID() + "@example.com"  // Random email address
-        ));
+        Supplier<Map<String, Object>> generator = () -> Map.of(
+            "userId", UUID.randomUUID().toString(),
+            "email", "user+" + UUID.randomUUID() + "@example.com"
+        );
+
+        // Create a large list from the generator and use .random() to avoid feeder exhaustion
+        return listFeeder(Stream.generate(generator).limit(10000).toList()).random();
     }
 
     /**
      * Adds a correlation ID to the session for request tracing.
-     * Useful for distributed tracing and debugging in logs.
-     * 
+     *
      * @param session The current Gatling session
      * @return Session with correlationId added
      */
@@ -42,4 +46,3 @@ public final class UserFeeder {
         return session.set("correlationId", UUID.randomUUID().toString());
     }
 }
-
